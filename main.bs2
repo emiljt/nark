@@ -1,0 +1,40 @@
+' nark.BS2
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+' I/O Definitions  
+L_F_IR_OUT    PIN     4
+L_F_IR_IN     PIN    11
+R_F_IR_OUT    PIN    15
+R_F_IR_IN     PIN    14
+SPEAKER       PIN     5
+
+' Constants
+IR_FREQ    CON    38500
+
+' Variables
+IRBits     VAR    Nib
+IRLeft     VAR    IRBits.BIT1
+IRRight    VAR    IRBits.BIT0
+
+' Main
+Main:
+  DO
+    ' Modulate left front IR LED
+    FREQOUT L_F_IR_OUT, 1, IR_FREQ
+    ' Read IR sensor
+    IRLeft = ~L_F_IR_IN
+    
+    ' Check IR for object
+    IF(IRLeft) THEN Alarm
+
+    ' Output reading
+    DEBUG HOME, BIN1 IRLeft
+    
+    PAUSE 20
+  LOOP
+END
+
+Alarm:
+  FREQOUT SPEAKER, 1000, 4200
+RETURN
